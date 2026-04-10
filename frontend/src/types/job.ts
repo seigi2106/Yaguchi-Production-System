@@ -11,6 +11,7 @@ export type JobItem = {
   title: string
   customerName: string
   assignee: string
+  startDate: string
   dueDate: string
   status: JobStatus
 }
@@ -22,4 +23,3 @@ export const STATUS_LABEL: Record<JobStatus, string> = {
   completed: '完了',
   on_hold: '保留',
 }
-

@@ -37,9 +37,41 @@ body {
   min-height: 100vh;
 }
 
+.view-switch {
+  width: min(1120px, 92vw);
+  margin: 24px auto 0;
+  display: inline-flex;
+  gap: 8px;
+  background: #fff5e7;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px;
+  position: sticky;
+  top: 10px;
+  z-index: 4;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.view-switch button {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.view-switch button.active {
+  background: #1f7f8f;
+  color: #f7fffe;
+}
+
 .page {
   width: min(1120px, 92vw);
-  margin: 36px auto;
+  margin: 18px auto 36px;
   display: grid;
   gap: 20px;
   animation: rise-in 520ms ease-out both;
@@ -179,9 +211,106 @@ th {
   background: var(--status-hold);
 }
 
+.filter-grid-schedule {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.schedule-table {
+  min-width: 1380px;
+}
+
+.schedule-table .fixed-col {
+  background: #fffbf6;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+
+.schedule-table .fixed-col:nth-child(2) {
+  left: 210px;
+}
+
+.schedule-table .fixed-col:nth-child(3) {
+  left: 370px;
+}
+
+.schedule-table .fixed-col:nth-child(1) {
+  min-width: 210px;
+}
+
+.schedule-table .fixed-col:nth-child(2) {
+  min-width: 160px;
+}
+
+.schedule-table .fixed-col:nth-child(3) {
+  min-width: 120px;
+}
+
+.schedule-table th.day-header {
+  min-width: 28px;
+  text-align: center;
+  padding: 8px 0;
+}
+
+.job-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.job-code,
+.meta-sub {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.day-cell {
+  width: 28px;
+  min-width: 28px;
+  padding: 0;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.range-planned {
+  background: color-mix(in oklab, var(--status-planned), white 46%);
+}
+
+.range-in_progress {
+  background: color-mix(in oklab, var(--status-progress), white 44%);
+}
+
+.range-waiting_parts {
+  background: color-mix(in oklab, var(--status-waiting), white 40%);
+}
+
+.range-completed {
+  background: color-mix(in oklab, var(--status-completed), white 45%);
+}
+
+.range-on_hold {
+  background: color-mix(in oklab, var(--status-hold), white 48%);
+}
+
+.due-cell {
+  color: #fff;
+  background: #111 !important;
+}
+
+.due-overdue {
+  background: var(--status-overdue) !important;
+}
+
 @media (max-width: 860px) {
+  .view-switch {
+    width: min(1120px, 96vw);
+    margin-top: 10px;
+  }
+
   .page {
-    margin: 20px auto;
+    margin: 12px auto 22px;
   }
 
   .page-header {
@@ -190,6 +319,10 @@ th {
 
   .filter-grid {
     grid-template-columns: 1fr;
+  }
+
+  .schedule-table .fixed-col {
+    position: static;
   }
 }
 
