@@ -9,3 +9,15 @@ export type WorkerSummary = {
   name: string
 }
 
+export type CustomerCreateFormValues = {
+  name: string
+  contactPerson: string
+  phone: string
+  email: string
+}
+
+export type WorkerCreateFormValues = {
+  employeeCode: string
+  name: string
+  isActive: boolean
+}

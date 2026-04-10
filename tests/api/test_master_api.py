@@ -84,3 +84,34 @@ def test_list_customers_and_workers(
         {"id": 2, "employee_code": "W-001", "name": "Sato"},
         {"id": 1, "employee_code": "W-002", "name": "Takahashi"},
     ]
+
+
+def test_create_customer_and_worker(client: TestClient) -> None:
+    """Master APIs should create customer and worker records."""
+    customer_response = client.post(
+        "/customers",
+        json={
+            "name": "Gamma Works",
+            "contact_person": "Abe",
+            "phone": "03-0000-0000",
+            "email": "abe@example.com",
+        },
+    )
+    worker_response = client.post(
+        "/workers",
+        json={
+            "employee_code": "W-100",
+            "name": "Yamada",
+            "is_active": True,
+        },
+    )
+
+    assert customer_response.status_code == 201
+    assert customer_response.json() == {"id": 1, "name": "Gamma Works"}
+
+    assert worker_response.status_code == 201
+    assert worker_response.json() == {
+        "id": 1,
+        "employee_code": "W-100",
+        "name": "Yamada",
+    }

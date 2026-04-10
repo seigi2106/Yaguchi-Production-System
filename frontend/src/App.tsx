@@ -2,9 +2,10 @@ import { useState } from 'react'
 
 import { useJobsData } from './hooks/useJobsData'
 import { JobsListPage } from './pages/JobsListPage'
+import { MasterPage } from './pages/MasterPage'
 import { SchedulePage } from './pages/SchedulePage'
 
-type ViewMode = 'list' | 'schedule'
+type ViewMode = 'list' | 'schedule' | 'master'
 
 function App() {
   const [mode, setMode] = useState<ViewMode>('list')
@@ -27,6 +28,13 @@ function App() {
         >
           日程表
         </button>
+        <button
+          type="button"
+          className={mode === 'master' ? 'active' : ''}
+          onClick={() => setMode('master')}
+        >
+          マスタ管理
+        </button>
       </nav>
 
       {mode === 'list' ? (
@@ -39,7 +47,7 @@ function App() {
           }}
           onCreateJob={createJob}
         />
-      ) : (
+      ) : mode === 'schedule' ? (
         <SchedulePage
           jobs={jobs}
           isLoading={isLoading}
@@ -48,6 +56,8 @@ function App() {
             void reload()
           }}
         />
+      ) : (
+        <MasterPage />
       )}
     </>
   )
