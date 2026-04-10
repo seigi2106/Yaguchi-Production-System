@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     app_env: str = Field(default="local")
     app_debug: bool = Field(default=False)
     log_level: str = Field(default="INFO")
+    database_url: str = Field(default="sqlite+pysqlite:///./yaguchi.db")
+    database_echo: bool = Field(default=False)
+    auto_create_tables: bool = Field(default=True)
 
     model_config = SettingsConfigDict(env_prefix="YAGUCHI_", case_sensitive=False)
 
@@ -21,4 +24,3 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """Return cached settings instance."""
     return Settings()
-
