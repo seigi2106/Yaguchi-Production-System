@@ -8,7 +8,7 @@ type ViewMode = 'list' | 'schedule'
 
 function App() {
   const [mode, setMode] = useState<ViewMode>('list')
-  const { jobs, isLoading, errorMessage, reload } = useJobsData()
+  const { jobs, isLoading, errorMessage, reload, createJob } = useJobsData()
 
   return (
     <>
@@ -37,6 +37,7 @@ function App() {
           onReload={() => {
             void reload()
           }}
+          onCreateJob={createJob}
         />
       ) : (
         <SchedulePage

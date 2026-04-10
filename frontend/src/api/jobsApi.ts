@@ -1,4 +1,9 @@
-import type { ApiJob, JobItem, JobStatus } from '../types/job'
+import type {
+  ApiJob,
+  CreateJobFormValues,
+  JobItem,
+  JobStatus,
+} from '../types/job'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
 
@@ -40,4 +45,26 @@ export const fetchJobs = async (): Promise<JobItem[]> => {
   }
   const payload = (await response.json()) as ApiJob[]
   return payload.map(mapApiJobToItem)
+}
+
+export const createJob = async (payload: CreateJobFormValues): Promise<void> => {
+  const response = await fetch(`${API_BASE_URL}/jobs`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      job_code: payload.jobCode,
+      title: payload.title,
+      customer_id: payload.customerId === '' ? null : Number(payload.customerId),
+      start_date: payload.startDate === '' ? null : payload.startDate,
+      due_date: payload.dueDate === '' ? null : payload.dueDate,
+      status: payload.status,
+      notes: payload.notes === '' ? null : payload.notes,
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`案件登録に失敗しました (${response.status})`)
+  }
 }

@@ -111,7 +111,8 @@ h2 {
 }
 
 .filter-panel,
-.table-panel {
+.table-panel,
+.form-panel {
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 18px;
@@ -140,6 +141,80 @@ select {
   font: inherit;
   color: var(--ink);
   background: #fff;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+  resize: vertical;
+}
+
+.form-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.lead-inline {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.job-form {
+  display: grid;
+  gap: 14px;
+}
+
+.form-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.span-2 {
+  grid-column: span 2;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-actions button {
+  border: 0;
+  border-radius: 12px;
+  background: #1f7f8f;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.form-actions button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.form-error {
+  border: 1px solid #e5989b;
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: #7f1d1d;
+  background: #fff3f2;
+}
+
+.form-error p {
+  margin: 0;
 }
 
 .table-header {
@@ -359,6 +434,14 @@ th {
 
   .filter-grid {
     grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .span-2 {
+    grid-column: span 1;
   }
 
   .schedule-table .fixed-col {

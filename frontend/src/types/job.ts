@@ -17,6 +17,16 @@ export type JobItem = {
   status: JobStatus
 }
 
+export type CreateJobFormValues = {
+  jobCode: string
+  title: string
+  customerId: string
+  startDate: string
+  dueDate: string
+  status: Exclude<JobStatus, 'waiting_parts'>
+  notes: string
+}
+
 export type ApiJob = {
   id: number
   job_code: string
@@ -40,3 +50,11 @@ export const STATUS_LABEL: Record<JobStatus, string> = {
   on_hold: '保留',
   cancelled: '中止',
 }
+
+export const CREATE_JOB_STATUSES: Exclude<JobStatus, 'waiting_parts'>[] = [
+  'planned',
+  'in_progress',
+  'completed',
+  'on_hold',
+  'cancelled',
+]

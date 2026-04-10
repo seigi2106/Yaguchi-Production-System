@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { fetchJobs } from '../api/jobsApi'
-import type { JobItem } from '../types/job'
+import { createJob as createJobRequest, fetchJobs } from '../api/jobsApi'
+import type { CreateJobFormValues, JobItem } from '../types/job'
 
 type JobsDataState = {
   jobs: JobItem[]
   isLoading: boolean
   errorMessage: string | null
   reload: () => Promise<void>
+  createJob: (payload: CreateJobFormValues) => Promise<void>
 }
 
 export const useJobsData = (): JobsDataState => {
@@ -34,11 +35,19 @@ export const useJobsData = (): JobsDataState => {
     void loadJobs()
   }, [loadJobs])
 
+  const createJob = useCallback(
+    async (payload: CreateJobFormValues) => {
+      await createJobRequest(payload)
+      await loadJobs()
+    },
+    [loadJobs],
+  )
+
   return {
     jobs,
     isLoading,
     errorMessage,
     reload: loadJobs,
+    createJob,
   }
 }
-

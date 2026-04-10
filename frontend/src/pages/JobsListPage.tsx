@@ -1,13 +1,15 @@
 import { FilterBar } from '../components/FilterBar'
+import { JobCreateForm } from '../components/JobCreateForm'
 import { JobTable } from '../components/JobTable'
 import { useJobFilters } from '../hooks/useJobFilters'
-import type { JobItem } from '../types/job'
+import type { CreateJobFormValues, JobItem } from '../types/job'
 
 type JobsListPageProps = {
   jobs: JobItem[]
   isLoading: boolean
   errorMessage: string | null
   onReload: () => void
+  onCreateJob: (payload: CreateJobFormValues) => Promise<void>
 }
 
 export const JobsListPage = ({
@@ -15,6 +17,7 @@ export const JobsListPage = ({
   isLoading,
   errorMessage,
   onReload,
+  onCreateJob,
 }: JobsListPageProps) => {
   const { filter, setFilter, customers, assignees, statuses, filteredJobs } =
     useJobFilters(jobs)
@@ -36,6 +39,8 @@ export const JobsListPage = ({
         statuses={statuses}
         onChange={setFilter}
       />
+
+      <JobCreateForm onSubmit={onCreateJob} />
 
       {isLoading ? <section className="info-panel">案件を読み込み中です...</section> : null}
 
