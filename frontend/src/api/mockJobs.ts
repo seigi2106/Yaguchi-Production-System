@@ -1,0 +1,59 @@
+import type { JobItem } from '../types/job'
+
+export const mockJobs: JobItem[] = [
+  {
+    id: 1,
+    jobCode: 'J-240401',
+    title: '電源ユニット組立',
+    customerName: '東和産業',
+    assignee: '佐藤',
+    dueDate: '2026-04-14',
+    status: 'in_progress',
+  },
+  {
+    id: 2,
+    jobCode: 'J-240402',
+    title: '制御盤ハーネス加工',
+    customerName: '北光電機',
+    assignee: '高橋',
+    dueDate: '2026-04-09',
+    status: 'waiting_parts',
+  },
+  {
+    id: 3,
+    jobCode: 'J-240403',
+    title: '検査治具メンテナンス',
+    customerName: '東和産業',
+    assignee: '田中',
+    dueDate: '2026-04-23',
+    status: 'planned',
+  },
+  {
+    id: 4,
+    jobCode: 'J-240404',
+    title: '試作基板半田付け',
+    customerName: '三鷹デバイス',
+    assignee: '鈴木',
+    dueDate: '2026-04-12',
+    status: 'on_hold',
+  },
+  {
+    id: 5,
+    jobCode: 'J-240405',
+    title: '出荷前バーンイン試験',
+    customerName: '北光電機',
+    assignee: '山本',
+    dueDate: '2026-04-10',
+    status: 'completed',
+  },
+  {
+    id: 6,
+    jobCode: 'J-240406',
+    title: '筐体組立・最終検査',
+    customerName: '緑川精工',
+    assignee: '佐藤',
+    dueDate: '2026-04-18',
+    status: 'in_progress',
+  },
+]
+
