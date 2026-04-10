@@ -22,10 +22,12 @@ export type ApiJob = {
   job_code: string
   title: string
   customer_id: number | null
+  customer_name: string | null
   start_date: string | null
   due_date: string | null
   status: string
   notes: string | null
+  assignee_names: string[]
   created_at: string
   updated_at: string
 }

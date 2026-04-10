@@ -38,8 +38,9 @@ class JobResponse(JobBase):
     """API response for job entity."""
 
     id: int
+    customer_name: str | None = None
+    assignee_names: list[str] = Field(default_factory=list)
     created_at: datetime
     updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
-

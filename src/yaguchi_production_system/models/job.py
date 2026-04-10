@@ -39,4 +39,20 @@ class Job(TimestampMixin, Base):
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     customer: Mapped["Customer | None"] = relationship(back_populates="jobs")
-    assignments: Mapped[list["JobAssignment"]] = relationship(back_populates="job")
+    assignments: Mapped[list["JobAssignment"]] = relationship(
+        back_populates="job",
+        cascade="all, delete-orphan",
+    )
+
+    @property
+    def customer_name(self) -> str | None:
+        """Return customer name when available."""
+        if self.customer is None:
+            return None
+        return self.customer.name
+
+    @property
+    def assignee_names(self) -> list[str]:
+        """Return assigned worker names ordered by assignment id."""
+        assignments = sorted(self.assignments, key=lambda assignment: assignment.id)
+        return [assignment.worker.name for assignment in assignments]

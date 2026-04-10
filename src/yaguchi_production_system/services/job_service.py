@@ -1,11 +1,12 @@
 """Business logic for jobs CRUD."""
 
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from yaguchi_production_system.api.schemas.job import JobCreate, JobUpdate
 from yaguchi_production_system.core.exceptions import NotFoundError
 from yaguchi_production_system.models.job import Job
+from yaguchi_production_system.models.job_assignment import JobAssignment
 
 
 def create_job(session: Session, payload: JobCreate) -> Job:
@@ -27,13 +28,28 @@ def create_job(session: Session, payload: JobCreate) -> Job:
 
 def list_jobs(session: Session) -> list[Job]:
     """Return all jobs ordered by id."""
-    statement = select(Job).order_by(Job.id.asc())
+    statement = (
+        select(Job)
+        .options(
+            selectinload(Job.customer),
+            selectinload(Job.assignments).selectinload(JobAssignment.worker),
+        )
+        .order_by(Job.id.asc())
+    )
     return list(session.scalars(statement))
 
 
 def get_job_or_404(session: Session, job_id: int) -> Job:
     """Return one job or raise NotFoundError."""
-    job = session.get(Job, job_id)
+    statement = (
+        select(Job)
+        .options(
+            selectinload(Job.customer),
+            selectinload(Job.assignments).selectinload(JobAssignment.worker),
+        )
+        .where(Job.id == job_id)
+    )
+    job = session.scalar(statement)
     if job is None:
         raise NotFoundError(
             "job not found",
@@ -64,4 +80,3 @@ def delete_job(session: Session, job_id: int) -> None:
     job = get_job_or_404(session, job_id)
     session.delete(job)
     session.commit()
-

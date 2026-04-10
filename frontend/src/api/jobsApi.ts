@@ -18,12 +18,15 @@ const toJobStatus = (value: string): JobStatus => {
 }
 
 const mapApiJobToItem = (job: ApiJob): JobItem => {
+  const assignee =
+    job.assignee_names.length > 0 ? job.assignee_names.join(' / ') : '未割当'
+
   return {
     id: job.id,
     jobCode: job.job_code,
     title: job.title,
-    customerName: job.customer_id === null ? '未設定' : `顧客#${job.customer_id}`,
-    assignee: '未割当',
+    customerName: job.customer_name ?? '未設定',
+    assignee,
     startDate: job.start_date,
     dueDate: job.due_date,
     status: toJobStatus(job.status),
@@ -38,4 +41,3 @@ export const fetchJobs = async (): Promise<JobItem[]> => {
   const payload = (await response.json()) as ApiJob[]
   return payload.map(mapApiJobToItem)
 }
-
