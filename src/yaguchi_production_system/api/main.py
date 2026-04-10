@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from yaguchi_production_system.api.error_handlers import add_exception_handlers
 from yaguchi_production_system.api.routes.healthcheck import router as healthcheck_router
 from yaguchi_production_system.api.routes.jobs import router as jobs_router
+from yaguchi_production_system.api.routes.master import router as master_router
 from yaguchi_production_system.core.database import init_db
 from yaguchi_production_system.core.logging import configure_logging, get_logger
 from yaguchi_production_system.core.settings import get_settings, parse_csv_config
@@ -36,6 +37,7 @@ def create_app() -> FastAPI:
     add_exception_handlers(app)
     app.include_router(healthcheck_router)
     app.include_router(jobs_router)
+    app.include_router(master_router)
 
     logger = get_logger(__name__)
     logger.info("FastAPI app initialized for env=%s", settings.app_env)
