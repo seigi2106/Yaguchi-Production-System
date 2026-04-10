@@ -1,5 +1,8 @@
+import { useState } from 'react'
+
 import { FilterBar } from '../components/FilterBar'
 import { JobCreateForm } from '../components/JobCreateForm'
+import { JobEditForm } from '../components/JobEditForm'
 import { JobTable } from '../components/JobTable'
 import { useJobFilters } from '../hooks/useJobFilters'
 import { useWorkersData } from '../hooks/useWorkersData'
@@ -7,6 +10,7 @@ import type {
   CreateJobFormValues,
   JobItem,
   UpdateJobAssignmentsValues,
+  UpdateJobFormValues,
 } from '../types/job'
 
 type JobsListPageProps = {
@@ -15,6 +19,7 @@ type JobsListPageProps = {
   errorMessage: string | null
   onReload: () => void
   onCreateJob: (payload: CreateJobFormValues) => Promise<void>
+  onUpdateJob: (jobId: number, payload: UpdateJobFormValues) => Promise<void>
   onUpdateAssignments: (
     jobId: number,
     payload: UpdateJobAssignmentsValues,
@@ -27,8 +32,10 @@ export const JobsListPage = ({
   errorMessage,
   onReload,
   onCreateJob,
+  onUpdateJob,
   onUpdateAssignments,
 }: JobsListPageProps) => {
+  const [selectedJobId, setSelectedJobId] = useState<number | null>(null)
   const { filter, setFilter, customers, assignees, statuses, filteredJobs } =
     useJobFilters(jobs)
   const {
@@ -36,6 +43,8 @@ export const JobsListPage = ({
     isLoading: isWorkersLoading,
     errorMessage: workersErrorMessage,
   } = useWorkersData()
+  const selectedJob =
+    jobs.find((job) => job.id === selectedJobId) ?? jobs[0] ?? null
 
   return (
     <main className="page">
@@ -56,6 +65,10 @@ export const JobsListPage = ({
       />
 
       <JobCreateForm onSubmit={onCreateJob} />
+
+      {selectedJob !== null ? (
+        <JobEditForm job={selectedJob} onSubmit={onUpdateJob} />
+      ) : null}
 
       {isLoading ? <section className="info-panel">案件を読み込み中です...</section> : null}
 
@@ -78,6 +91,10 @@ export const JobsListPage = ({
         <JobTable
           jobs={filteredJobs}
           workers={workers}
+          selectedJobId={selectedJob?.id ?? null}
+          onSelectJob={(job) => {
+            setSelectedJobId(job.id)
+          }}
           onUpdateAssignments={onUpdateAssignments}
         />
       ) : null}

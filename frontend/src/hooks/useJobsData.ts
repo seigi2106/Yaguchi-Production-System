@@ -3,12 +3,14 @@ import { useCallback, useEffect, useState } from 'react'
 import {
   createJob as createJobRequest,
   fetchJobs,
+  updateJob as updateJobRequest,
   updateJobAssignments as updateJobAssignmentsRequest,
 } from '../api/jobsApi'
 import type {
   CreateJobFormValues,
   JobItem,
   UpdateJobAssignmentsValues,
+  UpdateJobFormValues,
 } from '../types/job'
 
 type JobsDataState = {
@@ -17,6 +19,7 @@ type JobsDataState = {
   errorMessage: string | null
   reload: () => Promise<void>
   createJob: (payload: CreateJobFormValues) => Promise<void>
+  updateJob: (jobId: number, payload: UpdateJobFormValues) => Promise<void>
   updateJobAssignments: (
     jobId: number,
     payload: UpdateJobAssignmentsValues,
@@ -63,12 +66,21 @@ export const useJobsData = (): JobsDataState => {
     [loadJobs],
   )
 
+  const updateJob = useCallback(
+    async (jobId: number, payload: UpdateJobFormValues) => {
+      await updateJobRequest(jobId, payload)
+      await loadJobs()
+    },
+    [loadJobs],
+  )
+
   return {
     jobs,
     isLoading,
     errorMessage,
     reload: loadJobs,
     createJob,
+    updateJob,
     updateJobAssignments,
   }
 }

@@ -7,6 +7,8 @@ type JobTableProps = {
   jobs: JobItem[]
   workers: WorkerSummary[]
   onUpdateAssignments: (jobId: number, payload: { workerIds: number[] }) => Promise<void>
+  selectedJobId: number | null
+  onSelectJob: (job: JobItem) => void
 }
 
 const isOverdue = (dueDate: string, status: JobItem['status']): boolean => {
@@ -22,7 +24,13 @@ const formatDate = (date: string): string => {
   return new Date(date).toLocaleDateString('ja-JP')
 }
 
-export const JobTable = ({ jobs, workers, onUpdateAssignments }: JobTableProps) => {
+export const JobTable = ({
+  jobs,
+  workers,
+  onUpdateAssignments,
+  selectedJobId,
+  onSelectJob,
+}: JobTableProps) => {
   return (
     <section className="table-panel">
       <div className="table-header">
@@ -38,6 +46,7 @@ export const JobTable = ({ jobs, workers, onUpdateAssignments }: JobTableProps) 
               <th>顧客</th>
               <th>担当者</th>
               <th>割当更新</th>
+              <th>編集</th>
               <th>納期</th>
               <th>状態</th>
             </tr>
@@ -61,6 +70,17 @@ export const JobTable = ({ jobs, workers, onUpdateAssignments }: JobTableProps) 
                         await onUpdateAssignments(targetJobId, payload)
                       }}
                     />
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      className={
+                        job.id === selectedJobId ? 'row-action active' : 'row-action'
+                      }
+                      onClick={() => onSelectJob(job)}
+                    >
+                      {job.id === selectedJobId ? '編集中' : '編集'}
+                    </button>
                   </td>
                   <td className={overdue ? 'overdue' : ''}>
                     {job.dueDate === null ? '-' : formatDate(job.dueDate)}

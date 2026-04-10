@@ -15,6 +15,7 @@ function App() {
     errorMessage,
     reload,
     createJob,
+    updateJob,
     updateJobAssignments,
   } = useJobsData()
 
@@ -53,6 +54,7 @@ function App() {
             void reload()
           }}
           onCreateJob={createJob}
+          onUpdateJob={updateJob}
           onUpdateAssignments={updateJobAssignments}
         />
       ) : mode === 'schedule' ? (

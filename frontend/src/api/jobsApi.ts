@@ -4,6 +4,7 @@ import type {
   JobItem,
   JobStatus,
   UpdateJobAssignmentsValues,
+  UpdateJobFormValues,
 } from '../types/job'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
@@ -31,12 +32,14 @@ const mapApiJobToItem = (job: ApiJob): JobItem => {
     id: job.id,
     jobCode: job.job_code,
     title: job.title,
+    customerId: job.customer_id,
     customerName: job.customer_name ?? '未設定',
     assignee,
     assigneeIds: job.assignee_ids,
     startDate: job.start_date,
     dueDate: job.due_date,
     status: toJobStatus(job.status),
+    notes: job.notes,
   }
 }
 
@@ -87,5 +90,29 @@ export const updateJobAssignments = async (
 
   if (!response.ok) {
     throw new Error(`工員割当に失敗しました (${response.status})`)
+  }
+}
+
+export const updateJob = async (
+  jobId: number,
+  payload: UpdateJobFormValues,
+): Promise<void> => {
+  const response = await fetch(`${API_BASE_URL}/jobs/${jobId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      title: payload.title,
+      customer_id: payload.customerId === '' ? null : Number(payload.customerId),
+      start_date: payload.startDate === '' ? null : payload.startDate,
+      due_date: payload.dueDate === '' ? null : payload.dueDate,
+      status: payload.status,
+      notes: payload.notes === '' ? null : payload.notes,
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`案件更新に失敗しました (${response.status})`)
   }
 }

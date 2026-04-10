@@ -371,6 +371,24 @@ th {
   font-size: 0.8rem;
 }
 
+.row-action {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.83rem;
+  font-weight: 700;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.row-action.active {
+  background: #1f7f8f;
+  border-color: #1f7f8f;
+  color: #fff;
+}
+
 .info-panel {
   background: #fffaf4;
   border: 1px solid var(--line);
