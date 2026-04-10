@@ -1,0 +1,1 @@
+"""Yaguchi production system package."""
