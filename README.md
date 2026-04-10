@@ -6,14 +6,15 @@
 
 ## 目的
 - 案件管理の属人化解消
-- 日程表・進捗表・工数表の一元管理
+- 納期遅延、出荷待ち、進捗停滞の見える化
 - 工員負荷の見える化
 - 売上・粗利の即時把握
 - 初心者でも運用できる管理システムの実現
+- 将来的な実装最適化支援機能との連携基盤整備
 
 ## 技術スタック
 - Backend: Python 3.11 / FastAPI / SQLAlchemy / Alembic / Pydantic v2
-- Frontend: React + Vite + TypeScript
+- Frontend: React + Vite + TypeScript + PWA
 - Database: PostgreSQL
 - Tooling: Ruff / Black / isort / mypy / pytest / pre-commit
 - Editor: VSCode
