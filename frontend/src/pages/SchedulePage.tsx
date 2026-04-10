@@ -1,9 +1,21 @@
-import { mockJobs } from '../api/mockJobs'
 import { MonthlyScheduleTable } from '../components/MonthlyScheduleTable'
 import { ScheduleFilterBar } from '../components/ScheduleFilterBar'
 import { useScheduleFilters } from '../hooks/useScheduleFilters'
+import type { JobItem } from '../types/job'
 
-export const SchedulePage = () => {
+type SchedulePageProps = {
+  jobs: JobItem[]
+  isLoading: boolean
+  errorMessage: string | null
+  onReload: () => void
+}
+
+export const SchedulePage = ({
+  jobs,
+  isLoading,
+  errorMessage,
+  onReload,
+}: SchedulePageProps) => {
   const {
     filter,
     setFilter,
@@ -12,7 +24,7 @@ export const SchedulePage = () => {
     assignees,
     daysInMonth,
     filteredJobs,
-  } = useScheduleFilters(mockJobs)
+  } = useScheduleFilters(jobs)
 
   return (
     <main className="page">
@@ -32,12 +44,24 @@ export const SchedulePage = () => {
         onChange={setFilter}
       />
 
-      <MonthlyScheduleTable
-        jobs={filteredJobs}
-        daysInMonth={daysInMonth}
-        monthKey={filter.month}
-      />
+      {isLoading ? <section className="info-panel">日程表データを読み込み中です...</section> : null}
+
+      {errorMessage !== null ? (
+        <section className="info-panel error-panel">
+          <p>{errorMessage}</p>
+          <button type="button" onClick={onReload}>
+            再読み込み
+          </button>
+        </section>
+      ) : null}
+
+      {!isLoading && errorMessage === null ? (
+        <MonthlyScheduleTable
+          jobs={filteredJobs}
+          daysInMonth={daysInMonth}
+          monthKey={filter.month}
+        />
+      ) : null}
     </main>
   )
 }
-

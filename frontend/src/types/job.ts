@@ -4,6 +4,7 @@ export type JobStatus =
   | 'waiting_parts'
   | 'completed'
   | 'on_hold'
+  | 'cancelled'
 
 export type JobItem = {
   id: number
@@ -11,9 +12,22 @@ export type JobItem = {
   title: string
   customerName: string
   assignee: string
-  startDate: string
-  dueDate: string
+  startDate: string | null
+  dueDate: string | null
   status: JobStatus
+}
+
+export type ApiJob = {
+  id: number
+  job_code: string
+  title: string
+  customer_id: number | null
+  start_date: string | null
+  due_date: string | null
+  status: string
+  notes: string | null
+  created_at: string
+  updated_at: string
 }
 
 export const STATUS_LABEL: Record<JobStatus, string> = {
@@ -22,4 +36,5 @@ export const STATUS_LABEL: Record<JobStatus, string> = {
   waiting_parts: '部材待ち',
   completed: '完了',
   on_hold: '保留',
+  cancelled: '中止',
 }

@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     database_url: str = Field(default="sqlite+pysqlite:///./yaguchi.db")
     database_echo: bool = Field(default=False)
     auto_create_tables: bool = Field(default=True)
+    cors_allowed_origins: str = Field(
+        default="http://localhost:5173,http://127.0.0.1:5173",
+    )
 
     model_config = SettingsConfigDict(env_prefix="YAGUCHI_", case_sensitive=False)
 
@@ -24,3 +27,8 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """Return cached settings instance."""
     return Settings()
+
+
+def parse_csv_config(value: str) -> list[str]:
+    """Parse comma-separated config values."""
+    return [item.strip() for item in value.split(",") if item.strip()]

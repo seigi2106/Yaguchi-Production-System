@@ -39,7 +39,8 @@ export const JobTable = ({ jobs }: JobTableProps) => {
           </thead>
           <tbody>
             {jobs.map((job) => {
-              const overdue = isOverdue(job.dueDate, job.status)
+              const overdue =
+                job.dueDate === null ? false : isOverdue(job.dueDate, job.status)
               return (
                 <tr key={job.id}>
                   <td>{job.jobCode}</td>
@@ -47,7 +48,7 @@ export const JobTable = ({ jobs }: JobTableProps) => {
                   <td>{job.customerName}</td>
                   <td>{job.assignee}</td>
                   <td className={overdue ? 'overdue' : ''}>
-                    {formatDate(job.dueDate)}
+                    {job.dueDate === null ? '-' : formatDate(job.dueDate)}
                     {overdue ? ' (超過)' : ''}
                   </td>
                   <td>
@@ -64,4 +65,3 @@ export const JobTable = ({ jobs }: JobTableProps) => {
     </section>
   )
 }
-

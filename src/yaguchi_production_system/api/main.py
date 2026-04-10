@@ -4,13 +4,14 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from yaguchi_production_system.api.error_handlers import add_exception_handlers
 from yaguchi_production_system.api.routes.healthcheck import router as healthcheck_router
 from yaguchi_production_system.api.routes.jobs import router as jobs_router
 from yaguchi_production_system.core.database import init_db
 from yaguchi_production_system.core.logging import configure_logging, get_logger
-from yaguchi_production_system.core.settings import get_settings
+from yaguchi_production_system.core.settings import get_settings, parse_csv_config
 
 
 def create_app() -> FastAPI:
@@ -25,6 +26,13 @@ def create_app() -> FastAPI:
         yield
 
     app = FastAPI(title=settings.app_name, debug=settings.app_debug, lifespan=lifespan)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=parse_csv_config(settings.cors_allowed_origins),
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     add_exception_handlers(app)
     app.include_router(healthcheck_router)
     app.include_router(jobs_router)

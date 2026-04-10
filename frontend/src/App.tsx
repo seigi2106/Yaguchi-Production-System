@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { useJobsData } from './hooks/useJobsData'
 import { JobsListPage } from './pages/JobsListPage'
 import { SchedulePage } from './pages/SchedulePage'
 
@@ -7,6 +8,7 @@ type ViewMode = 'list' | 'schedule'
 
 function App() {
   const [mode, setMode] = useState<ViewMode>('list')
+  const { jobs, isLoading, errorMessage, reload } = useJobsData()
 
   return (
     <>
@@ -27,7 +29,25 @@ function App() {
         </button>
       </nav>
 
-      {mode === 'list' ? <JobsListPage /> : <SchedulePage />}
+      {mode === 'list' ? (
+        <JobsListPage
+          jobs={jobs}
+          isLoading={isLoading}
+          errorMessage={errorMessage}
+          onReload={() => {
+            void reload()
+          }}
+        />
+      ) : (
+        <SchedulePage
+          jobs={jobs}
+          isLoading={isLoading}
+          errorMessage={errorMessage}
+          onReload={() => {
+            void reload()
+          }}
+        />
+      )}
     </>
   )
 }

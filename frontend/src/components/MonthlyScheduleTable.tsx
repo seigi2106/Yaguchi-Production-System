@@ -11,9 +11,17 @@ const statusClassName = (status: JobItem['status']): string => {
   return `status status-${status}`
 }
 
-const toDayNumber = (date: string): number => new Date(date).getDate()
+const toDayNumber = (date: string | null): number | null => {
+  if (date === null) {
+    return null
+  }
+  return new Date(date).getDate()
+}
 
-const isOverdue = (dueDate: string, status: JobItem['status']): boolean => {
+const isOverdue = (dueDate: string | null, status: JobItem['status']): boolean => {
+  if (dueDate === null) {
+    return false
+  }
   if (status === 'completed') {
     return false
   }
@@ -73,8 +81,11 @@ export const MonthlyScheduleTable = ({
                     </span>
                   </td>
                   {dayHeaders.map((day) => {
-                    const inRange = day >= startDay && day <= dueDay
-                    const isDue = day === dueDay
+                    const hasStart = startDay !== null
+                    const hasDue = dueDay !== null
+                    const inRange =
+                      hasStart && hasDue ? day >= startDay && day <= dueDay : false
+                    const isDue = hasDue ? day === dueDay : false
                     return (
                       <td
                         key={`${job.id}-${day}`}
@@ -100,4 +111,3 @@ export const MonthlyScheduleTable = ({
     </section>
   )
 }
-

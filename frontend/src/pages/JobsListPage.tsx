@@ -1,11 +1,23 @@
 import { FilterBar } from '../components/FilterBar'
 import { JobTable } from '../components/JobTable'
-import { mockJobs } from '../api/mockJobs'
 import { useJobFilters } from '../hooks/useJobFilters'
+import type { JobItem } from '../types/job'
 
-export const JobsListPage = () => {
+type JobsListPageProps = {
+  jobs: JobItem[]
+  isLoading: boolean
+  errorMessage: string | null
+  onReload: () => void
+}
+
+export const JobsListPage = ({
+  jobs,
+  isLoading,
+  errorMessage,
+  onReload,
+}: JobsListPageProps) => {
   const { filter, setFilter, customers, assignees, statuses, filteredJobs } =
-    useJobFilters(mockJobs)
+    useJobFilters(jobs)
 
   return (
     <main className="page">
@@ -25,8 +37,18 @@ export const JobsListPage = () => {
         onChange={setFilter}
       />
 
-      <JobTable jobs={filteredJobs} />
+      {isLoading ? <section className="info-panel">案件を読み込み中です...</section> : null}
+
+      {errorMessage !== null ? (
+        <section className="info-panel error-panel">
+          <p>{errorMessage}</p>
+          <button type="button" onClick={onReload}>
+            再読み込み
+          </button>
+        </section>
+      ) : null}
+
+      {!isLoading && errorMessage === null ? <JobTable jobs={filteredJobs} /> : null}
     </main>
   )
 }
-

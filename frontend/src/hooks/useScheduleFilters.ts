@@ -8,19 +8,32 @@ type ScheduleFilter = {
   month: string
 }
 
-const getMonthKey = (date: string): string => date.slice(0, 7)
+const getMonthKey = (date: string | null): string | null => {
+  if (date === null) {
+    return null
+  }
+  return date.slice(0, 7)
+}
+
+const currentMonthKey = (): string => {
+  const now = new Date()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  return `${now.getFullYear()}-${month}`
+}
 
 export const useScheduleFilters = (jobs: JobItem[]) => {
-  const months = useMemo(
-    () => [...new Set(jobs.map((job) => getMonthKey(job.dueDate)))].sort(),
+  const rawMonths = useMemo(
+    () =>
+      [...new Set(jobs.map((job) => getMonthKey(job.dueDate)).filter(Boolean))] as string[],
     [jobs],
   )
-  const initialMonth = months[0] ?? new Date().toISOString().slice(0, 7)
+  const initialMonth = rawMonths[0] ?? currentMonthKey()
   const [filter, setFilter] = useState<ScheduleFilter>({
     customer: 'all',
     assignee: 'all',
     month: initialMonth,
   })
+  const months = rawMonths.length > 0 ? rawMonths : [filter.month]
 
   const customers = useMemo(
     () => ['all', ...new Set(jobs.map((job) => job.customerName))],
@@ -59,4 +72,3 @@ export const useScheduleFilters = (jobs: JobItem[]) => {
     filteredJobs,
   }
 }
-
