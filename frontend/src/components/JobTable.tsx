@@ -1,8 +1,12 @@
+import { JobAssignmentEditor } from './JobAssignmentEditor'
 import type { JobItem } from '../types/job'
+import type { WorkerSummary } from '../types/master'
 import { STATUS_LABEL } from '../types/job'
 
 type JobTableProps = {
   jobs: JobItem[]
+  workers: WorkerSummary[]
+  onUpdateAssignments: (jobId: number, payload: { workerIds: number[] }) => Promise<void>
 }
 
 const isOverdue = (dueDate: string, status: JobItem['status']): boolean => {
@@ -18,7 +22,7 @@ const formatDate = (date: string): string => {
   return new Date(date).toLocaleDateString('ja-JP')
 }
 
-export const JobTable = ({ jobs }: JobTableProps) => {
+export const JobTable = ({ jobs, workers, onUpdateAssignments }: JobTableProps) => {
   return (
     <section className="table-panel">
       <div className="table-header">
@@ -33,6 +37,7 @@ export const JobTable = ({ jobs }: JobTableProps) => {
               <th>案件名</th>
               <th>顧客</th>
               <th>担当者</th>
+              <th>割当更新</th>
               <th>納期</th>
               <th>状態</th>
             </tr>
@@ -47,6 +52,16 @@ export const JobTable = ({ jobs }: JobTableProps) => {
                   <td>{job.title}</td>
                   <td>{job.customerName}</td>
                   <td>{job.assignee}</td>
+                  <td>
+                    <JobAssignmentEditor
+                      jobId={job.id}
+                      workerIds={job.assigneeIds}
+                      workers={workers}
+                      onSave={async (targetJobId, payload) => {
+                        await onUpdateAssignments(targetJobId, payload)
+                      }}
+                    />
+                  </td>
                   <td className={overdue ? 'overdue' : ''}>
                     {job.dueDate === null ? '-' : formatDate(job.dueDate)}
                     {overdue ? ' (超過)' : ''}

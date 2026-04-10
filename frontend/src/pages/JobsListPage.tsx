@@ -2,7 +2,12 @@ import { FilterBar } from '../components/FilterBar'
 import { JobCreateForm } from '../components/JobCreateForm'
 import { JobTable } from '../components/JobTable'
 import { useJobFilters } from '../hooks/useJobFilters'
-import type { CreateJobFormValues, JobItem } from '../types/job'
+import { useWorkersData } from '../hooks/useWorkersData'
+import type {
+  CreateJobFormValues,
+  JobItem,
+  UpdateJobAssignmentsValues,
+} from '../types/job'
 
 type JobsListPageProps = {
   jobs: JobItem[]
@@ -10,6 +15,10 @@ type JobsListPageProps = {
   errorMessage: string | null
   onReload: () => void
   onCreateJob: (payload: CreateJobFormValues) => Promise<void>
+  onUpdateAssignments: (
+    jobId: number,
+    payload: UpdateJobAssignmentsValues,
+  ) => Promise<void>
 }
 
 export const JobsListPage = ({
@@ -18,9 +27,15 @@ export const JobsListPage = ({
   errorMessage,
   onReload,
   onCreateJob,
+  onUpdateAssignments,
 }: JobsListPageProps) => {
   const { filter, setFilter, customers, assignees, statuses, filteredJobs } =
     useJobFilters(jobs)
+  const {
+    workers,
+    isLoading: isWorkersLoading,
+    errorMessage: workersErrorMessage,
+  } = useWorkersData()
 
   return (
     <main className="page">
@@ -53,7 +68,19 @@ export const JobsListPage = ({
         </section>
       ) : null}
 
-      {!isLoading && errorMessage === null ? <JobTable jobs={filteredJobs} /> : null}
+      {workersErrorMessage !== null ? (
+        <section className="info-panel error-panel">
+          <p>{workersErrorMessage}</p>
+        </section>
+      ) : null}
+
+      {!isLoading && !isWorkersLoading && errorMessage === null ? (
+        <JobTable
+          jobs={filteredJobs}
+          workers={workers}
+          onUpdateAssignments={onUpdateAssignments}
+        />
+      ) : null}
     </main>
   )
 }

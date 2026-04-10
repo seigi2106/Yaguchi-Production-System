@@ -56,3 +56,9 @@ class Job(TimestampMixin, Base):
         """Return assigned worker names ordered by assignment id."""
         assignments = sorted(self.assignments, key=lambda assignment: assignment.id)
         return [assignment.worker.name for assignment in assignments]
+
+    @property
+    def assignee_ids(self) -> list[int]:
+        """Return assigned worker ids ordered by assignment id."""
+        assignments = sorted(self.assignments, key=lambda assignment: assignment.id)
+        return [assignment.worker_id for assignment in assignments]

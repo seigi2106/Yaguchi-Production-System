@@ -3,6 +3,7 @@ import type {
   CreateJobFormValues,
   JobItem,
   JobStatus,
+  UpdateJobAssignmentsValues,
 } from '../types/job'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
@@ -32,6 +33,7 @@ const mapApiJobToItem = (job: ApiJob): JobItem => {
     title: job.title,
     customerName: job.customer_name ?? '未設定',
     assignee,
+    assigneeIds: job.assignee_ids,
     startDate: job.start_date,
     dueDate: job.due_date,
     status: toJobStatus(job.status),
@@ -66,5 +68,24 @@ export const createJob = async (payload: CreateJobFormValues): Promise<void> => 
 
   if (!response.ok) {
     throw new Error(`案件登録に失敗しました (${response.status})`)
+  }
+}
+
+export const updateJobAssignments = async (
+  jobId: number,
+  payload: UpdateJobAssignmentsValues,
+): Promise<void> => {
+  const response = await fetch(`${API_BASE_URL}/jobs/${jobId}/assignments`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      worker_ids: payload.workerIds,
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`工員割当に失敗しました (${response.status})`)
   }
 }

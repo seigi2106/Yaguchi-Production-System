@@ -90,6 +90,7 @@ def test_jobs_crud_flow(
     assert created_job["title"] == "試作基板組立"
     assert created_job["customer_name"] == "東和産業"
     assert created_job["assignee_names"] == []
+    assert created_job["assignee_ids"] == []
 
     with session_factory() as session:
         assignment = JobAssignment(
@@ -107,12 +108,22 @@ def test_jobs_crud_flow(
     assert jobs[0]["id"] == job_id
     assert jobs[0]["customer_name"] == "東和産業"
     assert jobs[0]["assignee_names"] == ["佐藤"]
+    assert jobs[0]["assignee_ids"] == [worker_id]
 
     get_response = client.get(f"/jobs/{job_id}")
     assert get_response.status_code == 200
     assert get_response.json()["status"] == "planned"
     assert get_response.json()["customer_name"] == "東和産業"
     assert get_response.json()["assignee_names"] == ["佐藤"]
+    assert get_response.json()["assignee_ids"] == [worker_id]
+
+    replace_response = client.put(
+        f"/jobs/{job_id}/assignments",
+        json={"worker_ids": []},
+    )
+    assert replace_response.status_code == 200
+    assert replace_response.json()["assignee_names"] == []
+    assert replace_response.json()["assignee_ids"] == []
 
     update_response = client.put(
         f"/jobs/{job_id}",

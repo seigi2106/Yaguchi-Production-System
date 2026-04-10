@@ -6,12 +6,18 @@ from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.orm import Session
 
 from yaguchi_production_system.api.dependencies import get_session
-from yaguchi_production_system.api.schemas.job import JobCreate, JobResponse, JobUpdate
+from yaguchi_production_system.api.schemas.job import (
+    JobAssignmentsUpdate,
+    JobCreate,
+    JobResponse,
+    JobUpdate,
+)
 from yaguchi_production_system.services.job_service import (
     create_job,
     delete_job,
     get_job_or_404,
     list_jobs,
+    replace_job_assignments,
     update_job,
 )
 
@@ -48,9 +54,19 @@ def update_job_endpoint(job_id: int, payload: JobUpdate, session: SessionDepende
     return JobResponse.model_validate(job)
 
 
+@router.put("/{job_id}/assignments", response_model=JobResponse)
+def replace_job_assignments_endpoint(
+    job_id: int,
+    payload: JobAssignmentsUpdate,
+    session: SessionDependency,
+) -> JobResponse:
+    """Replace assigned workers for one job."""
+    job = replace_job_assignments(session, job_id, payload)
+    return JobResponse.model_validate(job)
+
+
 @router.delete("/{job_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
 def delete_job_endpoint(job_id: int, session: SessionDependency) -> Response:
     """Delete one job by id."""
     delete_job(session, job_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
-

@@ -34,12 +34,19 @@ class JobUpdate(BaseModel):
     notes: str | None = None
 
 
+class JobAssignmentsUpdate(BaseModel):
+    """Payload for replacing job assignments."""
+
+    worker_ids: list[int] = Field(default_factory=list)
+
+
 class JobResponse(JobBase):
     """API response for job entity."""
 
     id: int
     customer_name: str | None = None
     assignee_names: list[str] = Field(default_factory=list)
+    assignee_ids: list[int] = Field(default_factory=list)
     created_at: datetime
     updated_at: datetime
 

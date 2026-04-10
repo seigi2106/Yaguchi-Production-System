@@ -337,6 +337,40 @@ th {
   background: #6b7280;
 }
 
+.assignment-editor {
+  display: grid;
+  gap: 8px;
+  min-width: 220px;
+}
+
+.assignment-editor select {
+  min-height: 96px;
+  font-size: 0.85rem;
+}
+
+.assignment-editor button {
+  border: 0;
+  border-radius: 10px;
+  background: #7c5c20;
+  color: #fff;
+  font: inherit;
+  font-size: 0.83rem;
+  font-weight: 700;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.assignment-editor button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.assignment-error {
+  margin: 0;
+  color: #7f1d1d;
+  font-size: 0.8rem;
+}
+
 .info-panel {
   background: #fffaf4;
   border: 1px solid var(--line);

@@ -12,6 +12,7 @@ export type JobItem = {
   title: string
   customerName: string
   assignee: string
+  assigneeIds: number[]
   startDate: string | null
   dueDate: string | null
   status: JobStatus
@@ -27,6 +28,10 @@ export type CreateJobFormValues = {
   notes: string
 }
 
+export type UpdateJobAssignmentsValues = {
+  workerIds: number[]
+}
+
 export type ApiJob = {
   id: number
   job_code: string
@@ -38,6 +43,7 @@ export type ApiJob = {
   status: string
   notes: string | null
   assignee_names: string[]
+  assignee_ids: number[]
   created_at: string
   updated_at: string
 }
